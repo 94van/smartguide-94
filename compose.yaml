@@ -1,0 +1,11 @@
+services:
+  smartguide:
+    build: .
+    ports:
+      - "5173:5173"
+      - "3000:3000"
+    volumes:
+      - guide-data:/app/data
+    restart: unless-stopped
+volumes:
+  guide-data:

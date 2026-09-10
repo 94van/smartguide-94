@@ -1,0 +1,13 @@
+allowBuilds:
+  esbuild: true
+  sharp: false
+  workerd: true
+
+# Security patch pins; review when upgrading their parent packages.
+overrides:
+  "vite@>=8.0.0 <8.0.16": 8.0.16
+  "react-server-dom-webpack@>=19.2.0 <19.2.8": 19.2.8
+  "ws@>=8.0.0 <8.21.0": 8.21.0
+  "undici@>=7.0.0 <7.29.0": 7.29.0
+  "esbuild@>=0.27.3 <0.28.1": 0.28.1
+  "sharp@<0.35.4": 0.35.4

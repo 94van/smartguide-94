@@ -1,0 +1,16 @@
+SmartGuide · 玖肆智慧医院
+Project attribution: 94
+Static origin marker: 94-smartguide-jiusi-2026
+
+This project was developed with AI-assisted coding. Hospital, clinician and patient
+labels are demonstration identities, not representations of actual appointments,
+professional credentials, medical services, or endorsements.
+
+Static provenance appears in source, HTML metadata, scene.userData, a public JSON
+file and an HTTP response header. It does not transmit usage or identify visitors.
+It is removable and is not a copy-prevention mechanism or independent evidence of
+copyright ownership. Permitted copying is governed by LICENSE, not this marker.
+
+Third-party libraries and scaffold-derived UI components retain their original
+copyright and license terms; see THIRD_PARTY_NOTICES.md and third-party/.
+This NOTICE adds no restriction to the selected software license.
