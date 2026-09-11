@@ -12,11 +12,13 @@
 
 标记 `94-smartguide-jiusi-2026` 存在于源码常量、HTML 元信息和 body 属性、Three.js 场景数据、公开 provenance.json 和 API 响应头中。无访客编号、定位采集、回传、埋点或追踪请求；它只能辅助识别未移除标记的副本，不能发现所有复制行为。不要加入隐蔽追踪脚本或破坏性代码。保留提交历史、发布包 SHA-256、带日期的版本与设计记录，比单独隐藏字符串更有助于说明来源；校验和只证明文件一致性。
 
-## 首次发布
+## 发布与后续更新
+
+当前仓库为 [94van/smartguide-94](https://github.com/94van/smartguide-94)，已经发布。以下为检查步骤，不表示列出的所有设置均已启用。后续许可调整另见 [商业使用说明](COMMERCIAL_USE.md)。
 
 1. 解压 `release/smartguide-94-source.tar.gz` 到新目录，从这份白名单源码开始创建仓库。不要把工作目录整包上传：本地 data、缓存、聊天配置、环境变量和编译产物不在发布包内。
 2. 在 GitHub 创建空仓库，建议名称 `smartguide-94`；不要另选一个冲突的许可证模板。上传解压目录里的内容，包括隐藏的 .github、.openai 与 .gitignore。
-3. 先用私有仓库检查 Actions 结果和文件内容，再按意愿改为公开。本文没有自动创建或上传仓库。
+3. 先用私有仓库检查 Actions 结果和文件内容，再按意愿改为公开。当前仓库已上传，后续更新应继续核对 CI。
 4. 在 package.json 增加真实 repository / bugs / homepage 地址，在 README 顶部增加真实仓库链接；不要填占位链接冒充可用源码入口。
 5. 在 GitHub 设置中启用 Private vulnerability reporting、Dependabot alerts 和 Secret scanning / Push protection（以账号及仓库支持情况为准），保护默认分支，合并前要求 CI 通过。工作流仅授予读取仓库权限。
 6. 发布 v0.1.0 Release，附源码包和校验和；截图只使用模拟信息，不要混入患者信息、登录凭证、私人路径或桌面聊天。
