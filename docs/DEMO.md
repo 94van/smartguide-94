@@ -1,21 +1,25 @@
 # 演示与媒体
 
-> 本页截图和视频记录 0.1.0 界面。0.2.0 的拟物样式与手机面板切换已实现，但这些历史素材尚未更新。
+## 当前版本素材：0.2.1
 
-## 截图导览视频
+本目录展示图已全部从当前运行版本重新采集，视频也已重新生成。旧版完成提示与手机完成图已从当前分支移除，不再作为项目展示素材。Git 历史提交仍保留旧版本记录。
 
-[下载 24 秒 MP4](media/screenshot-tour.mp4)
+[观看 / 下载新版 24 秒 MP4](media/screenshot-tour.mp4)
 
-由项目实际界面截图制作，按院区总览、导诊工作区、全程路线、结束提示顺序展示，每张约 6 秒，使用短淡入淡出。无音轨。它不是连续操作录屏，不能用于证明动画流畅度或完整流程通过。
+视频为新截图组成的导览，无音频，非连续操作录屏。六个画面各约 4 秒：桌面院区、桌面室内、桌面全程导航、手机院区、手机路线、手机导诊单。不能用它证明动画帧率或完整流程通过。
 
-截图在 2026-09-11 的本地模拟环境采集，桌面视口为 1440 × 900。全部为虚构患者与医院场景；截图中的完成状态和目的地是采集当时的演示状态。未使用生成式图片替代产品界面。
+桌面使用 1440 × 900 视口；手机使用浏览器 390 × 844 响应式视口，不冒充真机录屏。素材来自同一当前代码版本的不同演示状态：桌面部分采集时已完成就诊，手机部分采集时为签到阶段；不是同一次连续就诊过程。均为虚构患者和院区，无生成式图片替代实际界面。
 
 | 文件 | 内容 |
 | --- | --- |
-| [campus-overview.png](media/campus-overview.png) | 三维院区总览 |
-| [medical-workspace.png](media/medical-workspace.png) | 建筑选层与导诊工作区 |
-| [journey.png](media/journey.png) | 从西药房到 CT 检查室的全程导航视图 |
-| [completed.png](media/completed.png) | 就诊结束提示 |
+| [campus-overview.png](media/campus-overview.png) | 桌面三维院区总览 |
+| [medical-workspace.png](media/medical-workspace.png) | 桌面整栋选层与导诊工作区 |
+| [journey.png](media/journey.png) | 东门入口至 CT 的全程路线 |
+| [mobile-campus.png](media/mobile-campus.png) | 手机院区，状态卡收起 |
+| [mobile-route.png](media/mobile-route.png) | 手机路线操作面板 |
+| [mobile-journey.png](media/mobile-journey.png) | 手机全程三维导航 |
+| [mobile-task.png](media/mobile-task.png) | 手机当前任务卡 |
+| [mobile-guide.png](media/mobile-guide.png) | 手机纸质导诊单 |
 
 ## 3–5 分钟交互演示脚本
 
@@ -32,13 +36,7 @@
 
 正式操作录屏建议保留实际点击、路线播放、成功与错误提示，不使用剪辑隐藏失败。当前仓库只提供截图导览视频；后续操作录屏可替换 README 的视频链接，保留媒体类型说明。
 
-## 历史手机素材
 
-以下同为 0.1.0 的真实截图，归档供版本对照，未用于展示 0.2.1 的交互效果。
+## 本地访问
 
-- [院区](media/mobile-campus.png)
-- [路线](media/mobile-route.png)
-- [全程导航](media/mobile-journey.png)
-- [完成状态](media/mobile-completion.png)
-
-最新版通过 `pnpm dev` 启动。电脑和手机连接同一可信 Wi-Fi，手机使用电脑局域网 IP 加端口 5173；不能在手机中用 localhost 访问电脑。启动参数采用 Vinext 的 `--hostname 0.0.0.0`。
+通过 `pnpm dev` 启动。电脑和手机连接同一可信 Wi-Fi，手机使用电脑局域网 IP 加端口 5173；不能在手机中用 localhost 访问电脑。启动参数采用 Vinext 的 `--hostname 0.0.0.0`。
