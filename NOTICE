@@ -13,4 +13,9 @@ copyright ownership. Permitted copying is governed by LICENSE, not this marker.
 
 Third-party libraries and scaffold-derived UI components retain their original
 copyright and license terms; see THIRD_PARTY_NOTICES.md and third-party/.
+Versions published from 0.2.0 under the root LICENSE use the SmartGuide
+Noncommercial License 1.0. Commercial use requires prior written permission.
+Earlier AGPL releases and independent third-party rights are unaffected; see
+docs/COMMERCIAL_USE.md and docs/legal/AGPL-3.0-legacy.txt.
+The tactile UI is an original implementation; no Smartisan brand assets are used.
 This NOTICE adds no restriction to the selected software license.

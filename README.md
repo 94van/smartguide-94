@@ -4,10 +4,12 @@
 
 **把一张导诊单，变成看得懂的三维就诊路线。**
 
-三维院区 · 跨楼导航 · 适老界面 · 模拟就诊流程
+三维院区 · 跨楼导航 · 适老拟物界面 · 模拟就诊流程
+
+**源码可见 · 非商业使用免费 · 商用需书面许可**
 
 [![Source checks](https://github.com/94van/smartguide-94/actions/workflows/ci.yml/badge.svg)](https://github.com/94van/smartguide-94/actions/workflows/ci.yml)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-1B6B7A.svg)](LICENSE)
+[![License: Noncommercial](https://img.shields.io/badge/License-Noncommercial-1B6B7A.svg)](LICENSE)
 
 [观看导览](#-24-秒界面导览) · [本地启动](#-本地启动) · [开发文档](docs/DEVELOPMENT.md) · [反馈问题](https://github.com/94van/smartguide-94/issues)
 
@@ -54,6 +56,10 @@
 全程导航只演示路线，不自动修改患者位置或完成任务；结束后需要明确确认“模拟到达”。
 
 ## ♿ 熟悉、清楚、有反馈
+
+0.2.0 增加实体按键、纸卡压边和内凹信息槽。手机底部通过“当前任务 / 路线导航 / 我的导诊单”切换面板，避免卡片叠压地图；高对比主题保留平整大字样式。设计为项目原创实现，不使用锤子品牌图标或系统素材。
+
+> 本页现有截图与视频记录 0.1.0 界面，尚未替换为本次拟物样式。
 
 - **医院蓝绿**：默认医疗色主按钮，配暖米白导诊单；操作靠文字和形状辨认。
 - **高对比大字**：白底深字、大按钮；另提供空间展示主题。
@@ -102,7 +108,7 @@ pnpm release:check
 
 ## 📄 许可与来源
 
-当前版本使用 **[AGPL-3.0-only](LICENSE)**，允许商业使用，但须遵守适用的源码提供、再分发和声明保留义务。**AGPL 不是“禁止商用”协议。** [查看商业使用与后续许可说明](docs/COMMERCIAL_USE.md)。
+从 **0.2.0** 起，使用 **[SmartGuide 非商业使用许可 1.0](LICENSE)**：非商业使用免费，商用需事先书面许可，禁止未经授权商用。此模式为源码可见，不属于 OSI 定义的开源。此前按 AGPL 发布的版本保留原授权；第三方许可不变。[商业授权方式及历史版本边界](docs/COMMERCIAL_USE.md)。
 
 署名 **94**。源码、页面与场景包含静态来源标记 `94-smartguide-jiusi-2026`；无访客追踪或隐蔽回传，不能阻止复制，也不构成版权权属证明。
 

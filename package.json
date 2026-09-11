@@ -1,6 +1,6 @@
 {
   "name": "smartguide-hospital",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -62,7 +62,7 @@
   },
   "type": "module",
   "packageManager": "pnpm@11.19.0",
-  "license": "AGPL-3.0-only",
+  "license": "SEE LICENSE IN LICENSE",
   "author": "94",
   "repository": {
     "type": "git",

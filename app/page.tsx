@@ -45,6 +45,7 @@ export default function Home() {
     useHospital();
   const [level, setLevel] = useState('out-1');
   const [spatial, setSpatial] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState<'task' | 'route' | 'guide'>('task');
   const [theme, setTheme] = useState<'medical' | 'contrast' | 'spatial'>(
     'medical',
   );
@@ -86,6 +87,7 @@ export default function Home() {
   const atTask = !!current.target && state.location === current.target;
   function navigate(id: string) {
     setTarget(id);
+    setMobilePanel('route');
     setQuery('');
     setLevel(getNode(state.location)?.level || 'campus');
     setNotice('路线已规划，请查看地图和分段指引');
@@ -126,6 +128,7 @@ export default function Home() {
               const id = (input as { destination?: string })?.destination;
               if (!id || !getNode(id)) throw Error('无效目的地');
               setTarget(id);
+              setMobilePanel('route');
               setSpatial(false);
               setLevel(getNode(state.location).level);
               return {
@@ -157,6 +160,7 @@ export default function Home() {
     );
   return (
     <main
+      data-mobile-panel={mobilePanel}
       className={
         'shell building-workspace theme-' +
         theme +
@@ -217,7 +221,11 @@ export default function Home() {
           </div>
         )}
         <div className="patient-grid">
-          <aside className="card guide-card">
+          <aside className="card guide-card" aria-label="今日导诊单">
+            <div className="mobile-ticket-heading">
+              <span><ClipboardList size={17} /> 万穗 · A023</span>
+              <strong>{done ? '就诊已完成' : '今日导诊单'}</strong>
+            </div>
             <div className="card-heading">
               <h2>
                 <ClipboardList size={20} /> 今日导诊单
@@ -451,7 +459,10 @@ export default function Home() {
                 onArrive={async () => {
                   if (!target) return false;
                   const ok = await act({ type: 'arrive', id: target });
-                  if (ok) setLevel(getNode(target).level);
+                  if (ok) {
+                    setLevel(getNode(target).level);
+                    setMobilePanel('task');
+                  }
                   return ok;
                 }}
                 theme={theme}
@@ -537,8 +548,10 @@ export default function Home() {
                             !online || busy || state.location === target
                           }
                           onClick={async () => {
-                            if (await act({ type: 'arrive', id: target }))
+                            if (await act({ type: 'arrive', id: target })) {
                               setLevel(getNode(target).level);
+                              setMobilePanel('task');
+                            }
                           }}
                         >
                           <Check size={16} />
@@ -607,6 +620,17 @@ export default function Home() {
           <span>所有医院、患者与诊疗数据均为虚构演示数据</span>
         </footer>
       </div>
+      <nav className="mobile-module-dock" aria-label="导诊面板切换">
+        <button type="button" aria-pressed={mobilePanel === 'task'} onClick={() => setMobilePanel('task')}>
+          <span className="module-key"><Check size={22} /></span><span>当前任务</span>
+        </button>
+        <button type="button" aria-pressed={mobilePanel === 'route'} onClick={() => setMobilePanel('route')}>
+          <span className="module-key"><Navigation size={22} /></span><span>路线导航</span>
+        </button>
+        <button type="button" aria-pressed={mobilePanel === 'guide'} onClick={() => setMobilePanel('guide')}>
+          <span className="module-key"><ClipboardList size={22} /></span><span>我的导诊单</span>
+        </button>
+      </nav>
       {notice && noticeKind !== 'error' && (
         <div className={'notice notice-' + noticeKind} role="status">
           {notice}

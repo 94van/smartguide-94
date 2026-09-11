@@ -8,8 +8,9 @@ function walk(dir) { for (const e of fs.readdirSync(dir,{withFileTypes:true})) {
 for(const dir of roots)walk(dir);
 const patterns=[/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,/gh[pousr]_[A-Za-z0-9]{30,}/,/github_pat_[A-Za-z0-9_]{40,}/,/sk-(?:proj-)?[A-Za-z0-9_-]{40,}/,/AKIA[0-9A-Z]{16}/,/\/Users\/[A-Za-z0-9_.-]+\//];
 for(const file of files){const contents=fs.readFileSync(file,'utf8');if(patterns.some(p=>p.test(contents)))throw Error(`Potential secret or personal path: ${file}`);}
-const pkg=JSON.parse(fs.readFileSync('package.json'));if(pkg.license!=='AGPL-3.0-only')throw Error('Unexpected project license');
-if(!fs.readFileSync('LICENSE','utf8').includes('GNU AFFERO GENERAL PUBLIC LICENSE'))throw Error('Missing full license');
+const pkg=JSON.parse(fs.readFileSync('package.json'));if(pkg.license!=='SEE LICENSE IN LICENSE')throw Error('Unexpected project license');
+if(!fs.readFileSync('LICENSE','utf8').includes('SmartGuide Noncommercial License 1.0'))throw Error('Missing full license');
+if(!fs.readFileSync('docs/legal/AGPL-3.0-legacy.txt','utf8').includes('GNU AFFERO GENERAL PUBLIC LICENSE'))throw Error('Missing historical license');
 console.log(`Release checks passed: ${files.length} allowlisted files; no common secret patterns or personal home paths detected. This is not an exhaustive security audit.`);
 if(process.argv.includes('--pack')){
  const dest='release/smartguide-94-source';fs.mkdirSync(dest,{recursive:true});
