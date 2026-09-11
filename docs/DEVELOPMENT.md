@@ -38,7 +38,7 @@ data/                 本地运行数据
 | GET /api/hospital                     | 地图、科室、楼层、流程定义                                                     |
 | GET /api/route?from=service&to=cardio | 当前通行条件下的路线                                                           |
 | GET /api/qr?id=cardio                 | 定位二维码 SVG                                                                 |
-| POST /api/action                      | advance / call / locate / arrive / accessible / elevator / block / poi / reset |
+| POST /api/action                      | advance / call / skip-wait / locate / arrive / accessible / elevator / block / poi / reset |
 
 所有写操作必须提交当前 `version`，过期版本返回 409；患者端自动读取新状态并提示重试。未到达任务地点、未叫到当前患者或无可通行路线时，后端拒绝违规推进。
 

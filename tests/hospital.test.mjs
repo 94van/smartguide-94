@@ -113,3 +113,16 @@ test('编辑科室可保留，非法操作不改变原始状态', () => {
   );
   assert.throws(() => applyAction(s, { type: 'reset', scenario: 'fake' }));
 });
+
+test('演示跳过等待只清空队列，保留接诊与到达校验', () => {
+  assert.throws(() => applyAction(initialState(), { type: 'skip-wait' }), /候诊/);
+  const waiting = { ...initialState(), stage: 2, location: stages[2].target };
+  const called = applyAction(waiting, { type: 'skip-wait' });
+  assert.equal(called.queue, 0);
+  assert.equal(called.stage, 2);
+  assert.equal(called.location, waiting.location);
+  assert.equal(waiting.queue, 5);
+  assert.equal(applyAction(called, { type: 'advance' }).stage, 3);
+  assert.throws(() => applyAction(called, { type: 'skip-wait' }), /已经叫到/);
+  assert.throws(() => applyAction({ ...waiting, location: 'service' }, { type: 'skip-wait' }), /到达/);
+});

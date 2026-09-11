@@ -19,7 +19,7 @@ start(['server/api.mjs']);
 start([
   'node_modules/vinext/dist/cli.js',
   'dev',
-  '--host',
+  '--hostname',
   '0.0.0.0',
   '--port',
   '5173',

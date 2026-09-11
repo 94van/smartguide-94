@@ -70,7 +70,7 @@ export function createCampus(host: HTMLElement, options: Options) {
     powerPreference: 'high-performance',
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.4 : 1.8));
-  renderer.setSize(host.clientWidth, host.clientHeight);
+  renderer.setSize(Math.max(1, host.clientWidth), Math.max(1, host.clientHeight));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -82,14 +82,14 @@ export function createCampus(host: HTMLElement, options: Options) {
   scene.fog = new THREE.FogExp2(0x071523, 0.012);
   const camera = new THREE.PerspectiveCamera(
     36,
-    host.clientWidth / host.clientHeight,
+    Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight),
     0.1,
     160,
   );
   const overview = new THREE.Vector3(24, 23, 29).multiplyScalar(
     mobile ? 1.35 : 1,
   );
-  camera.position.copy(reduced ? overview : new THREE.Vector3(37, 37, 48));
+  camera.position.copy(reduced || mobile ? overview : new THREE.Vector3(37, 37, 48));
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1, 0);
   controls.enableDamping = true;
@@ -426,7 +426,7 @@ export function createCampus(host: HTMLElement, options: Options) {
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(
-    new THREE.Vector2(host.clientWidth, host.clientHeight),
+    new THREE.Vector2(Math.max(1, host.clientWidth), Math.max(1, host.clientHeight)),
     0.32,
     0.55,
     1.35,
@@ -451,7 +451,7 @@ export function createCampus(host: HTMLElement, options: Options) {
     targetTo: THREE.Vector3;
     start: number;
     duration: number;
-  } | null = reduced
+  } | null = reduced || mobile
     ? null
     : {
         from: camera.position.clone(),
@@ -540,7 +540,9 @@ export function createCampus(host: HTMLElement, options: Options) {
       const v = tween.duration
         ? Math.min((performance.now() - tween.start) / tween.duration, 1)
         : 1;
-      const k = 1 - Math.pow(1 - v, 4);
+      const k = entering
+        ? v * v * v * (v * (v * 6 - 15) + 10)
+        : 1 - Math.pow(1 - v, 4);
       camera.position.lerpVectors(tween.from, tween.to, k);
       controls.target.lerpVectors(tween.targetFrom, tween.targetTo, k);
       if (v === 1) tween = null;
@@ -610,13 +612,13 @@ export function createCampus(host: HTMLElement, options: Options) {
       const b = campusBuildings.find((b) => b.id === id)!;
       tween = {
         from: camera.position.clone(),
-        to: new THREE.Vector3(b.x, 1.4, b.z + b.d / 2 + 3),
+        to: new THREE.Vector3(b.x + 4, 5, b.z + b.d / 2 + 8),
         targetFrom: controls.target.clone(),
-        targetTo: new THREE.Vector3(b.x, 1.25, b.z),
+        targetTo: new THREE.Vector3(b.x, 2, b.z),
         start: performance.now(),
-        duration: reduced ? 0 : 1350,
+        duration: reduced ? 0 : 900,
       };
-      timer = setTimeout(done, reduced ? 0 : 1400);
+      timer = setTimeout(done, reduced ? 0 : 940);
     },
     dispose() {
       disposed = true;

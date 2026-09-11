@@ -388,6 +388,13 @@ export function applyAction(state, action) {
       message = stage.action;
       break;
     }
+    case 'skip-wait':
+      if (state.stage !== 2) throw Error('当前不在候诊阶段');
+      if (state.location !== stages[2].target) throw Error('请先模拟到达诊室');
+      if (state.queue === 0) throw Error('已经叫到 A023');
+      next.queue = 0;
+      message = '已跳过模拟等待，叫到 A023；请点击接诊继续';
+      break;
     case 'call':
       if (state.stage !== 2) throw Error('当前不在候诊阶段');
       if (state.queue === 0) throw Error('已经叫到 A023');

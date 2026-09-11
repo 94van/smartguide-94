@@ -15,6 +15,8 @@ import {
   QrCode,
   FileText,
   ShieldCheck,
+  ChevronDown,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Progress } from '@/components/ui/progress';
@@ -43,9 +45,15 @@ import {
 export default function Home() {
   const { state, online, busy, notice, noticeKind, act, setNotice } =
     useHospital();
-  const [level, setLevel] = useState('out-1');
+  const [level, setLevel] = useState('campus');
   const [spatial, setSpatial] = useState(false);
   const [mobilePanel, setMobilePanel] = useState<'task' | 'route' | 'guide'>('task');
+  const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
+  function toggleMobilePanel(next: 'task' | 'route' | 'guide') {
+    setMobilePanelOpen(next !== mobilePanel || !mobilePanelOpen);
+    setMobilePanel(next);
+  }
   const [theme, setTheme] = useState<'medical' | 'contrast' | 'spatial'>(
     'medical',
   );
@@ -88,6 +96,7 @@ export default function Home() {
   function navigate(id: string) {
     setTarget(id);
     setMobilePanel('route');
+    setMobilePanelOpen(true);
     setQuery('');
     setLevel(getNode(state.location)?.level || 'campus');
     setNotice('路线已规划，请查看地图和分段指引');
@@ -129,6 +138,7 @@ export default function Home() {
               if (!id || !getNode(id)) throw Error('无效目的地');
               setTarget(id);
               setMobilePanel('route');
+    setMobilePanelOpen(true);
               setSpatial(false);
               setLevel(getNode(state.location).level);
               return {
@@ -161,6 +171,8 @@ export default function Home() {
   return (
     <main
       data-mobile-panel={mobilePanel}
+      data-panel-open={mobilePanelOpen}
+      data-tools-open={mobileToolsOpen}
       className={
         'shell building-workspace theme-' +
         theme +
@@ -271,6 +283,12 @@ export default function Home() {
                     <strong>已叫到 A023，请进入诊室</strong>
                   )}
                 </div>
+              )}
+              {state.stage === 2 && state.queue > 0 && (
+                <button className="secondary skip-wait-button" disabled={!online || busy || !atTask}
+                  onClick={() => act({ type: 'skip-wait' })}>
+                  <Clock size={17} /> {busy ? '正在处理…' : '跳过等待（演示）'}
+                </button>
               )}
               {current.target && !done && (
                 <button
@@ -462,6 +480,7 @@ export default function Home() {
                   if (ok) {
                     setLevel(getNode(target).level);
                     setMobilePanel('task');
+                    setMobilePanelOpen(true);
                   }
                   return ok;
                 }}
@@ -551,6 +570,7 @@ export default function Home() {
                             if (await act({ type: 'arrive', id: target })) {
                               setLevel(getNode(target).level);
                               setMobilePanel('task');
+                    setMobilePanelOpen(true);
                             }
                           }}
                         >
@@ -620,15 +640,24 @@ export default function Home() {
           <span>所有医院、患者与诊疗数据均为虚构演示数据</span>
         </footer>
       </div>
+      <button className="mobile-tools-toggle" aria-expanded={mobileToolsOpen} onClick={() => setMobileToolsOpen(!mobileToolsOpen)}>
+        <span><Map size={18} /> {level === 'campus' ? '院区总览' : floors.find((f) => f.id === level)?.name}</span>
+        <span><SlidersHorizontal size={16} /> {mobileToolsOpen ? '收起设置' : '地图设置'}<ChevronDown size={16} /></span>
+      </button>
+      <button className="mobile-status-toggle" aria-expanded={mobilePanelOpen} onClick={() => setMobilePanelOpen(!mobilePanelOpen)}>
+        <span className="status-toggle-icon">{mobilePanel === 'route' ? <Navigation size={20} /> : <ClipboardList size={20} />}</span>
+        <span className="status-toggle-copy"><small>{mobilePanel === 'guide' ? '万穗 · A023' : mobilePanel === 'route' ? '路线导航' : '当前任务'}</small><strong>{mobilePanel === 'route' ? (target ? getNode(target, state)?.name : '选择目的地') : mobilePanel === 'guide' ? '今日导诊单' : current.title}</strong></span>
+        <span className="status-toggle-action">{mobilePanelOpen ? '收起' : '展开'}<ChevronDown size={18} /></span>
+      </button>
       <nav className="mobile-module-dock" aria-label="导诊面板切换">
-        <button type="button" aria-pressed={mobilePanel === 'task'} onClick={() => setMobilePanel('task')}>
+        <button type="button" aria-pressed={mobilePanel === 'task'} onClick={() => toggleMobilePanel('task')} aria-expanded={mobilePanel === 'task' && mobilePanelOpen}>
           <span className="module-key"><Check size={22} /></span><span>当前任务</span>
         </button>
-        <button type="button" aria-pressed={mobilePanel === 'route'} onClick={() => setMobilePanel('route')}>
+        <button type="button" aria-pressed={mobilePanel === 'route'} onClick={() => toggleMobilePanel('route')} aria-expanded={mobilePanel === 'route' && mobilePanelOpen}>
           <span className="module-key"><Navigation size={22} /></span><span>路线导航</span>
         </button>
-        <button type="button" aria-pressed={mobilePanel === 'guide'} onClick={() => setMobilePanel('guide')}>
-          <span className="module-key"><ClipboardList size={22} /></span><span>我的导诊单</span>
+        <button type="button" aria-pressed={mobilePanel === 'guide'} onClick={() => toggleMobilePanel('guide')} aria-expanded={mobilePanel === 'guide' && mobilePanelOpen}>
+          <span className="module-key"><ClipboardList size={22} /></span><span>导诊单</span>
         </button>
       </nav>
       {notice && noticeKind !== 'error' && (

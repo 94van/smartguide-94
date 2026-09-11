@@ -3048,10 +3048,12 @@ footer {
     top: 96px;
     font-size: 10px;
   }
+  /* The outer mobile campus already reserves the toolbar and task panel. */
   .building-workspace .inline-campus .scene-host,
   .building-workspace .inline-campus .spatial-labels {
-    top: 90px;
-    height: calc(100% - 290px);
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 }
 /* Familiar hospital UI: teal machine, warm paper guide, explicit semantic states. */
@@ -4208,5 +4210,207 @@ footer {
   .building-workspace .access-label { flex-basis: 100%; justify-content: flex-end; }
   .building-workspace .inline-campus {
     top: 152px; bottom: calc(var(--panel-height) + var(--panel-bottom) + 12px); height: auto;
+  }
+}
+
+@media (max-width: 740px) {
+  .building-workspace.theme-spatial .module-key {
+    color: #195663;
+  }
+  .building-workspace.theme-spatial .mobile-module-dock button[aria-pressed='true'] .module-key {
+    color: #fff;
+  }
+}
+
+/* Mobile map first: compact toggles, one sheet, no stacked hardware plinth. */
+.mobile-tools-toggle, .mobile-status-toggle { display: none; }
+@media (max-width: 740px) {
+  .building-workspace {
+    --panel-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    --panel-height: 0px;
+    --map-top: 64px;
+    --mobile-surface: #fffefb;
+    --mobile-ink: #1a363b;
+    --mobile-line: #c5d2cf;
+    --mobile-shadow: 0 4px 18px #092a3514;
+  }
+  .building-workspace[data-panel-open='true'] { --panel-height: min(30svh, 250px); }
+  .building-workspace[data-mobile-panel='guide'][data-panel-open='true'] { --panel-height: min(36svh, 300px); }
+  .building-workspace[data-tools-open='true'] { --map-top: 216px; }
+  .building-workspace .topbar { height: 54px; border-bottom: 1px solid var(--mobile-line); box-shadow: none; }
+  .building-workspace .workspace { top: 54px; }
+  .building-workspace .brand { font-size: 16px; }
+  .building-workspace .brand small { display: none; }
+  .building-workspace .brand-mark { width: 30px; height: 30px; border-radius: 9px; box-shadow: none; }
+  .building-workspace .topbar nav a:last-child { font-size: 13px; }
+  .mobile-tools-toggle {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    position: absolute; top: 66px; left: 12px; right: 12px; z-index: 31;
+    min-height: 44px; padding: 10px 14px; border-radius: 14px;
+    background: var(--mobile-surface); color: var(--mobile-ink);
+    border: 1px solid var(--mobile-line); box-shadow: var(--mobile-shadow); font-size: 14px;
+  }
+  .mobile-tools-toggle > span { display: flex; align-items: center; gap: 8px; }
+  .mobile-tools-toggle > span:last-child { font-size: 13px; }
+  .building-workspace[data-tools-open='false'] :is(.page-heading, .map-toolbar, .level-bar) {
+    opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-12px);
+  }
+  .building-workspace .page-heading { top: 66px; }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) .map-toolbar { top: 66px; }
+  .building-workspace .level-bar { top: 120px; }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) :is(.choice-trigger, .search-wrap, .floor-buttons button) {
+    border-radius: 10px; box-shadow: none; border-width: 1px;
+  }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) .interior-canvas {
+    top: var(--map-top); bottom: calc(var(--panel-height) + var(--panel-bottom) + 62px);
+  }
+  .building-workspace .inline-campus {
+    top: var(--map-top); bottom: calc(var(--panel-height) + var(--panel-bottom) + 62px);
+    height: auto;
+  }
+  .building-workspace .interior-caption { display: none; }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) .interior-tools {
+    bottom: calc(var(--panel-height) + var(--panel-bottom) + 114px);
+  }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) .interior-status {
+    bottom: calc(var(--panel-height) + var(--panel-bottom) + 64px);
+  }
+  .building-workspace .interior-status > button:disabled { display: none; }
+  .mobile-status-toggle {
+    position: absolute; z-index: 26; left: 12px; right: 12px;
+    bottom: calc(var(--panel-bottom) + var(--panel-height)); min-height: 58px;
+    display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+    background: var(--mobile-surface); color: var(--mobile-ink);
+    border: 1px solid var(--mobile-line); border-radius: 16px;
+    box-shadow: var(--mobile-shadow); text-align: left;
+  }
+  .status-toggle-icon { display: grid; place-items: center; flex: 0 0 36px; height: 36px; border-radius: 10px; background: #e9f2ef; color: #1b6b7a; }
+  .status-toggle-copy { flex: 1; min-width: 0; }
+  .status-toggle-copy small { display: block; font-size: 12px; color: #4a5c55; }
+  .status-toggle-copy strong { display: block; font-size: 16px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+  .status-toggle-action { display: flex; align-items: center; gap: 4px; font-size: 13px; color: #365c63; }
+  .building-workspace[data-panel-open='true'] .mobile-status-toggle { border-radius: 16px 16px 0 0; box-shadow: 0 -3px 16px #1233290b; }
+  .building-workspace[data-panel-open='true'] .status-toggle-action svg,
+  .building-workspace[data-tools-open='true'] .mobile-tools-toggle > span:last-child > svg:last-child { transform: rotate(180deg); }
+  .building-workspace[data-panel-open='false'] :is(.guide-card, .route-panel, .map-footer) {
+    opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(100%);
+  }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) :is(.guide-card, .route-panel, .map-footer) {
+    border: 1px solid var(--mobile-line); border-top: 0; border-radius: 0 0 16px 16px;
+    box-shadow: 0 8px 20px #10302912; background: var(--mobile-surface) !important;
+    color: var(--mobile-ink); backdrop-filter: none;
+  }
+  .building-workspace .mobile-ticket-heading { display: none; }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) .next-card {
+    padding: 14px 16px; background: #fffcf4; color: #302e23;
+  }
+  .building-workspace .next-card > span { display: none; }
+  .building-workspace .next-card h3 { font-size: 20px; color: #263e39; }
+  .building-workspace .next-card .task-hint { color: #4a5c55; font-size: 16px; }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) .primary {
+    background: #1b6b7a; border: 1px solid #155865; box-shadow: inset 0 1px 0 #ffffff25, 0 1px 2px #0f303c20;
+    text-shadow: none; border-radius: 10px; color: #fff;
+  }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) .secondary { background: #fff; color: #1b6b7a; box-shadow: none; border: 1px solid #a4bab2; border-radius: 10px; }
+  .building-workspace .next-card button:disabled { background: #e7ece9; color: #56685f; border-color: #c2cdc7; opacity: 1; }
+  .building-workspace .timeline-row strong { color: #263e39; font-size: 16px; }
+  .building-workspace .timeline-row p { color: #52675d; font-size: 14px; }
+  .building-workspace .timeline { padding: 12px 20px; }
+  .building-workspace .mobile-module-dock {
+    padding: 4px; border-radius: 16px; background: var(--mobile-surface);
+    border: 1px solid var(--mobile-line); box-shadow: var(--mobile-shadow);
+  }
+  .building-workspace .mobile-module-dock button {
+    flex-direction: row; justify-content: center; min-height: 46px; gap: 6px;
+    font-size: 14px; font-weight: 500; color: #4a5c55; border-radius: 12px;
+  }
+  .building-workspace .mobile-module-dock .module-key,
+  .building-workspace .mobile-module-dock button[aria-pressed='true'] .module-key {
+    width: 20px; height: 24px; flex: 0 0 20px; border: 0; background: none; box-shadow: none; color: inherit; transform: none;
+  }
+  .building-workspace .mobile-module-dock .module-key svg { width: 19px; height: 19px; }
+  .building-workspace .mobile-module-dock button[aria-pressed='true'] { background: #e9f2ef; color: #155965; font-weight: 600; }
+  .building-workspace.theme-contrast { --mobile-ink: #111; --mobile-line: #52645b; --mobile-shadow: none; }
+  .building-workspace.theme-contrast .status-toggle-copy strong { font-size: 18px; }
+}
+@media (max-width: 740px) {
+  .building-workspace[data-panel-open='false'] { --panel-height: 0px; }
+}
+
+.building-workspace .next-card .skip-wait-button {
+  grid-column: 1 / -1; width: 100%; margin: 4px 0 8px; min-height: 44px;
+}
+
+.building-beacon { touch-action: manipulation; }
+/* Quiet confirmation: a single tonal lift, no expanding halo or flash. */
+.building-beacon[data-confirmed='true'] {
+  animation: building-entry-confirm 180ms ease-out both;
+  border-color: #80b6bd !important;
+  opacity: 1;
+}
+@keyframes building-entry-confirm {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.12); }
+}
+.scene-transition {
+  background: #0a1c2b;
+  transition: opacity 220ms 680ms ease-in-out;
+}
+:root[data-hospital-theme='medical'] .scene-transition { background: #f3f6f4; }
+:root[data-hospital-theme='contrast'] .scene-transition { background: #fff; }
+.scene-host { transition: opacity 360ms ease-out; }
+.scene-entering .spatial-labels { opacity: 0; transition: opacity 160ms ease-out; }
+.interior-canvas canvas { animation: interior-arrival 260ms ease-out both; }
+@keyframes interior-arrival { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .building-beacon[data-confirmed='true'], .interior-canvas canvas { animation: none; }
+  .scene-transition, .scene-host, .scene-entering .spatial-labels { transition: none; }
+}
+.building-workspace .next-card .skip-wait-button {
+  grid-column: 1 / -1; width: 100%; margin: 4px 0 8px; min-height: 44px;
+}
+
+/* Continuous reversible sheet motion; geometry and handle share one timing curve. */
+@media (max-width: 740px) {
+  .building-workspace {
+    --sheet-size: min(30svh, 250px);
+    --sheet-time: 480ms;
+    --sheet-ease: cubic-bezier(.22, .8, .2, 1);
+  }
+  .building-workspace[data-mobile-panel='guide'] { --sheet-size: min(36svh, 300px); }
+  .building-workspace:is(.theme-medical, .theme-contrast, .theme-spatial) :is(.guide-card, .route-panel, .map-footer) {
+    height: var(--sheet-size); max-height: var(--sheet-size) !important;
+    transform: translateY(0); opacity: 1; visibility: visible;
+    transition: transform var(--sheet-time) var(--sheet-ease),
+      opacity 240ms ease-out, visibility 0s;
+  }
+  .building-workspace[data-panel-open='false']:is(.theme-medical, .theme-contrast, .theme-spatial) :is(.guide-card, .route-panel, .map-footer) {
+    transform: translateY(100%); opacity: 0; visibility: hidden;
+    transition: transform var(--sheet-time) var(--sheet-ease),
+      opacity 240ms ease-out, visibility 0s var(--sheet-time);
+  }
+  .building-workspace .mobile-status-toggle {
+    transition: bottom var(--sheet-time) var(--sheet-ease),
+      border-radius var(--sheet-time) var(--sheet-ease), box-shadow 240ms ease;
+  }
+  .building-workspace :is(.interior-canvas, .inline-campus, .interior-tools, .interior-status, .notice) {
+    transition: bottom var(--sheet-time) var(--sheet-ease), top var(--sheet-time) var(--sheet-ease);
+  }
+  .building-workspace :is(.page-heading, .map-toolbar, .level-bar) {
+    transform: translateY(0); opacity: 1; visibility: visible;
+    transition: transform 360ms var(--sheet-ease), opacity 240ms ease-out, visibility 0s;
+  }
+  .building-workspace[data-tools-open='false'] :is(.page-heading, .map-toolbar, .level-bar) {
+    transform: translateY(-12px); opacity: 0; visibility: hidden;
+    transition: transform 360ms var(--sheet-ease), opacity 200ms ease-out, visibility 0s 360ms;
+  }
+  .status-toggle-action svg, .mobile-tools-toggle > span:last-child > svg:last-child {
+    transition: transform var(--sheet-time) var(--sheet-ease);
+  }
+}
+@media (max-width: 740px) and (prefers-reduced-motion: reduce) {
+  .building-workspace :is(.guide-card, .route-panel, .map-footer, .mobile-status-toggle, .interior-canvas, .inline-campus, .interior-tools, .interior-status, .notice, .page-heading, .map-toolbar, .level-bar),
+  .status-toggle-action svg, .mobile-tools-toggle > span:last-child > svg:last-child {
+    transition: none !important;
   }
 }

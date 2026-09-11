@@ -55,6 +55,11 @@ export default function SpatialEntry({
   const [failed, setFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [entering, setEntering] = useState(false);
+  const entryLock = useRef(false);
+  const entryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTap = useRef<{ id: BuildingId; time: number } | null>(null);
+  const [confirmed, setConfirmed] = useState<BuildingId | null>(null);
   const onEnterRef = useRef(onEnter);
   onEnterRef.current = onEnter;
   const place = places.find((p) => p.id === selected)!;
@@ -80,6 +85,8 @@ export default function SpatialEntry({
       });
     return () => {
       stopped = true;
+      if (entryTimer.current) clearTimeout(entryTimer.current);
+      if (tapTimer.current) clearTimeout(tapTimer.current);
       engine.current?.dispose();
       engine.current = null;
     };
@@ -88,14 +95,36 @@ export default function SpatialEntry({
     setSelected(id);
     engine.current?.select(id);
   }
-  function enter() {
-    if (entering) return;
-    if (failed || !engine.current) {
-      onEnterRef.current(selected);
+  function enterBuilding(id: BuildingId) {
+    if (entryLock.current) return;
+    entryLock.current = true;
+    if (tapTimer.current) clearTimeout(tapTimer.current);
+    setSelected(id);
+    setConfirmed(id);
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    entryTimer.current = setTimeout(() => {
+      setEntering(true);
+      if (failed || !engine.current) onEnterRef.current(id);
+      else engine.current.enter(id, () => onEnterRef.current(id));
+    }, reduced ? 0 : 180);
+  }
+  function enter() { enterBuilding(selected); }
+  function tapBuilding(id: BuildingId, keyboard: boolean) {
+    if (entryLock.current) return;
+    if (keyboard) { enterBuilding(id); return; }
+    const now = performance.now();
+    if (lastTap.current?.id === id && now - lastTap.current.time < 420) {
+      lastTap.current = null;
+      enterBuilding(id);
       return;
     }
-    setEntering(true);
-    engine.current.enter(selected, () => onEnterRef.current(selected));
+    lastTap.current = { id, time: now };
+    if (tapTimer.current) clearTimeout(tapTimer.current);
+    // Keep the label still until a second tap has had time to arrive.
+    tapTimer.current = setTimeout(() => {
+      lastTap.current = null;
+      choose(id);
+    }, 420);
   }
   return (
     <section
@@ -116,9 +145,12 @@ export default function SpatialEntry({
               labels.current[i] = el;
             }}
             className="building-beacon"
-            onClick={() => choose(p.id)}
-            disabled={entering}
-            aria-label={`选择${p.name}`}
+            onClick={(event) => tapBuilding(p.id, event.detail === 0)}
+            onDoubleClick={() => enterBuilding(p.id)}
+            data-confirmed={confirmed === p.id}
+            disabled={entering || confirmed !== null}
+            title="单击选中，双击进入大楼"
+            aria-label={`${p.name}，双击进入；键盘按回车进入`}
           >
             <span className="beacon-number">{p.n}</span>
             <span>
@@ -146,7 +178,7 @@ export default function SpatialEntry({
         <button
           onClick={() => onEnterRef.current('out')}
           className="skip-entry"
-          disabled={entering}
+          disabled={entering || confirmed !== null}
         >
           直接查看导诊单 <ArrowUpRight size={15} />
         </button>
@@ -267,7 +299,7 @@ export default function SpatialEntry({
               key={p.id}
               className={selected === p.id ? 'selected' : ''}
               onClick={() => choose(p.id)}
-              disabled={entering}
+              disabled={entering || confirmed !== null}
             >
               <span>{p.n}</span>
               <b>{p.name}</b>
