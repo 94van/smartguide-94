@@ -210,6 +210,27 @@ for (const [b, f, rooms] of specs) {
 addEdge('out-1-entry', 'tech-1-entry', 'outdoor');
 addEdge('tech-1-entry', 'ward-1-entry', 'outdoor');
 addEdge('out-1-entry', 'ward-1-entry', 'outdoor');
+// Facilities use corridor-side points, separate from the six-room floor template.
+export const amenities = [
+  { id: 'nursery', name: '母婴室', aliases: '哺乳 换尿布 母婴', level: 'out-3', x: 80, y: 350, anchor: 'out-3-left', bends: [{ x: 80, y: 300 }], hours: '08:00–17:30', detail: '门诊楼 3F 西侧服务区 · 哺乳与婴儿护理（模拟）' },
+  { id: 'nurse', name: '门诊护士台', aliases: '护士 咨询 帮助', level: 'out-2', x: 510, y: 350, anchor: 'out-2-middle', bends: [{ x: 510, y: 300 }], hours: '08:00–17:30', detail: '门诊楼 2F 中央走廊 · 候诊咨询与协助（模拟）' },
+  { id: 'charging', name: '手机充电点', aliases: '充电 电源 手机', level: 'out-1', x: 80, y: 400, anchor: 'out-1-stairs', bends: [{ x: 80, y: 440 }], hours: '08:00–17:30', detail: '门诊楼 1F 西侧休息区 · 手机充电，不是车辆充电（模拟）' },
+  { id: 'vending', name: '自动贩卖机', aliases: '饮料 饮水 零食 售货机', level: 'out-1', x: 720, y: 400, anchor: 'out-1-entry', bends: [{ x: 720, y: 440 }], hours: '全天', detail: '门诊楼 1F 东门外侧 · 饮料与便民用品（模拟）' },
+  { id: 'parking', name: '户外停车场 · 人行入口', aliases: '停车 车场 车辆 找车', level: 'out-1', x: 780, y: 520, anchor: 'out-1-entry', bends: [{ x: 780, y: 440 }], hours: '全天', detail: '门诊楼东侧户外停车区 · 本路线为步行路线，不提供车辆驾驶或实时车位（模拟）' },
+];
+for (const a of amenities) {
+  const anchor = getNode(a.anchor);
+  nodes.push({ ...a, building: anchor.building, floor: anchor.floor, type: 'facility' });
+  addEdge(a.anchor, a.id, 'walk', a.bends);
+}
+export const doctors = [
+  { id: 'zhongguo', name: '钟国', department: '心血管内科', room: '门诊楼 2F · 218 诊室', target: 'cardio', schedule: '08:00–12:00 / 14:00–17:30', note: '模拟医生资料，排班不代表真实出诊；不提供真实诊疗服务。' },
+];
+export const destinationPresets = [
+  { id: 'care', name: '就诊 / 检查', items: ['service', 'cardio', 'ct', 'blood', 'pharmacy', 'report'] },
+  { id: 'help', name: '便民设施', items: ['toilet1', 'nursery', 'nurse', 'charging', 'vending', 'wardtoilet'] },
+  { id: 'parking', name: '停车', items: ['parking'] },
+];
 /** @returns {{version:number,stage:number,scenario:string,queue:number,location:string,accessible:boolean,elevatorClosed:boolean,blocked:string[],poiOverrides:Record<string,{name:string,hours:string}>,logs:{id:number,time:string,message:string}[],updatedAt:string}} */
 export const initialState = () => ({
   version: 1,

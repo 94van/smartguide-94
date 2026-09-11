@@ -126,3 +126,17 @@ test('演示跳过等待只清空队列，保留接诊与到达校验', () => {
   assert.throws(() => applyAction(called, { type: 'skip-wait' }), /已经叫到/);
   assert.throws(() => applyAction({ ...waiting, location: 'service' }, { type: 'skip-wait' }), /到达/);
 });
+
+test('便民设施和停车入口可达，封闭末段后不可达', async () => {
+  const { amenities, destinationPresets, doctors } = await import('../shared/hospital.mjs');
+  for (const group of destinationPresets) for (const id of group.items) assert(nodes.some((n) => n.id === id));
+  for (const a of amenities) {
+    const route = planRoute('service', a.id);
+    assert(route, a.id);
+    assert.equal(route.path.at(-1), a.id);
+    assert.equal(planRoute('service', a.id, { ...initialState(), blocked: [route.segments.at(-1).id] }), null);
+  }
+  assert(planRoute('parking', 'cardio', { ...initialState(), accessible: true }));
+  assert.equal(planRoute('parking', 'nursery', { ...initialState(), accessible: true, elevatorClosed: true }), null);
+  assert(doctors.every((d) => nodes.some((n) => n.id === d.target)));
+});

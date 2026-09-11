@@ -237,6 +237,7 @@ export default function SpatialEntry({
         <small>虚构院区 · 空间示意</small>
       </div>
       <div className="scene-actions">
+        <button onClick={() => engine.current?.overhead()} disabled={!ready || entering} aria-label="院区俯视视角">俯视</button>
         <button
           title="恢复初始视角"
           aria-label="恢复初始视角"

@@ -3,6 +3,7 @@ import {provenance} from '@/shared/provenance.mjs';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import {
   nodes,
+  amenities,
   pois,
   edges,
   floors,
@@ -377,17 +378,22 @@ export function createInterior(
         true,
       );
     }
+    for (const facility of amenities.filter((a) => a.level === data.level)) {
+      const p = pos(facility.id);
+      box(facility.id === 'parking' ? 3.2 : 0.65, 0.08, facility.id === 'parking' ? 2.4 : 0.65, p.x, 0.05, p.z, 0x4d8079, facility.id);
+      label(facility.name, p.x, 1.5, p.z, '#d7f3e9', facility.id, true);
+    }
     // All route points use the same coordinates as the authoritative routing graph.
     const route = data.target
       ? planRoute(data.state.location, data.target, data.state)
       : null;
-    for (const e of route?.segments || []) {
+    for (const [segmentIndex, e] of (route?.segments || []).entries()) {
       if (
         getNode(e.a).level !== data.level ||
         getNode(e.b).level !== data.level
       )
         continue;
-      const points = edgePolyline(e).map(
+      const points = edgePolyline(e, route!.path[segmentIndex]).map(
         (p) => new THREE.Vector3((p.x - 400) * 0.04, 0.16, (p.y - 300) * 0.04),
       );
       for (let i = 1; i < points.length; i++) {
@@ -411,6 +417,14 @@ export function createInterior(
           b.clone().sub(a).normalize(),
         );
         content.add(line);
+        const length = a.distanceTo(b);
+        for (let d = 0.8; d < length - 0.3; d += 2.4) {
+          const arrow = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.42, 3), line.material);
+          arrow.position.copy(a).lerp(b, d / length);
+          arrow.position.y = 0.2;
+          arrow.quaternion.copy(line.quaternion);
+          content.add(arrow);
+        }
       }
     }
     if (route) {
@@ -551,6 +565,11 @@ export function createInterior(
   return {
     update,
     reset,
+    view(mode: 'overview' | 'overhead') {
+      walking = false;
+      if (mode === 'overview') { reset(); return; }
+      move(new THREE.Vector3(0, host.clientWidth < 600 ? 48 : 38, 0.1), new THREE.Vector3(0, 0, 0));
+    },
     zoom(delta: number) {
       walking = false;
       tween = null;

@@ -4414,3 +4414,30 @@ footer {
     transition: none !important;
   }
 }
+.destination-launch {
+  position: absolute; top: 130px; right: 24px; z-index: 20; display: flex; align-items: center; gap: 8px;
+  background: #fffefb; color: #1b5663; border: 1px solid #a3bab2; padding: 10px 16px; border-radius: 12px;
+  min-height: 44px; box-shadow: 0 4px 14px #14362c12; font-size: 16px;
+}
+[data-slot='dialog-content'].destination-dialog { width: min(600px, 94vw); max-height: 90svh; overflow: auto; border-radius: 18px; padding: 22px; }
+.preset-categories { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.preset-categories button { min-height: 44px; border-radius: 9px; padding: 8px 4px; color: #24483e; background: #edf3ef; font-size: 14px; border: 1px solid #b6c8bf; }
+.preset-categories button[aria-pressed='true'] { background: #1b6b7a; color: #fff; border-color: #1b6b7a; }
+.preset-destinations { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.preset-destinations button { display: flex; align-items: center; gap: 8px; min-height: 78px; padding: 12px; background: #fffefa; border: 1px solid #b4c7bf; color: #1a363b; text-align: left; border-radius: 12px; }
+.preset-destinations button span { flex: 1; }
+.preset-destinations strong { display: block; font-size: 16px; }
+.preset-destinations small { display: block; font-size: 13px; color: #4a5c55; margin-top: 3px; }
+.doctor-profile { padding: 18px; border: 1px solid #d4c08a; background: #fffbf2; border-radius: 12px; color: #263e39; }
+.doctor-profile h3 { margin-bottom: 12px; }.doctor-profile h3 small { font-size: 16px; }
+.doctor-profile p { font-size: 16px; line-height: 1.7; margin-bottom: 8px; }
+.doctor-profile .primary { width: 100%; margin-top: 12px; }
+.preset-note, .destination-detail { font-size: 14px; color: #4a5c55; line-height: 1.6; }
+.destination-detail { padding-block: 8px; }
+@media (max-width: 740px) {
+  .destination-launch { top: 122px; right: 12px; padding: 8px 12px; font-size: 14px; }
+  .building-workspace[data-tools-open='true'] .destination-launch { top: 268px; }
+  .preset-destinations button { padding: 10px; gap: 6px; }
+  .preset-destinations button > svg:first-child { display: none; }
+  .building-workspace .interior-tools button { font-size: 13px; }
+}

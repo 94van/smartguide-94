@@ -588,6 +588,10 @@ export function createCampus(host: HTMLElement, options: Options) {
   animate();
   return {
     select: focus,
+    overhead() {
+      if (entering) return;
+      tween = { from: camera.position.clone(), to: new THREE.Vector3(0.1, 52, 12), targetFrom: controls.target.clone(), targetTo: new THREE.Vector3(0, 0, 0), start: performance.now(), duration: reduced ? 0 : 700 };
+    },
     expand(value: boolean) {
       expanded = value;
     },

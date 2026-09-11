@@ -40,6 +40,9 @@ import {
   floors,
   buildings,
   getNode,
+  amenities,
+  doctors,
+  destinationPresets,
   planRoute,
 } from '@/shared/hospital.mjs';
 export default function Home() {
@@ -76,6 +79,8 @@ export default function Home() {
   }
   const [target, setTarget] = useState<string | null>(null);
   const [query, setQuery] = useState('');
+  const [destinationsOpen, setDestinationsOpen] = useState(false);
+  const [presetGroup, setPresetGroup] = useState('care');
   const [locate, setLocate] = useState(false);
   const [location, setLocation] = useState('out-1-entry');
   const [report, setReport] = useState(false);
@@ -86,7 +91,7 @@ export default function Home() {
     [state, target],
   );
   const results = query.trim()
-    ? pois.filter((p) =>
+    ? [...pois, ...amenities].filter((p) =>
         `${getNode(p.id, state).name} ${p.aliases}`
           .toLowerCase()
           .includes(query.trim().toLowerCase()),
@@ -98,6 +103,7 @@ export default function Home() {
     setMobilePanel('route');
     setMobilePanelOpen(true);
     setQuery('');
+    setDestinationsOpen(false);
     setLevel(getNode(state.location)?.level || 'campus');
     setNotice('路线已规划，请查看地图和分段指引');
   }
@@ -516,6 +522,7 @@ export default function Home() {
                       </div>
                     )}
                   </div>
+                  {getNode(target)?.detail && <p className="destination-detail">{getNode(target).detail}</p>}
                   {route ? (
                     <>
                       <div className="route-levels">
@@ -649,6 +656,27 @@ export default function Home() {
         <span className="status-toggle-copy"><small>{mobilePanel === 'guide' ? '万穗 · A023' : mobilePanel === 'route' ? '路线导航' : '当前任务'}</small><strong>{mobilePanel === 'route' ? (target ? getNode(target, state)?.name : '选择目的地') : mobilePanel === 'guide' ? '今日导诊单' : current.title}</strong></span>
         <span className="status-toggle-action">{mobilePanelOpen ? '收起' : '展开'}<ChevronDown size={18} /></span>
       </button>
+      <button className="destination-launch" onClick={() => setDestinationsOpen(true)}><MapPin size={18} /> 去哪儿</button>
+      <Dialog open={destinationsOpen} onOpenChange={setDestinationsOpen}>
+        <DialogContent className="destination-dialog">
+          <DialogTitle>选择目的地</DialogTitle>
+          <DialogDescription>点击常用地点，地面导航线会沿可通行路线显示。</DialogDescription>
+          <div className="preset-categories" role="group" aria-label="目的地分类">
+            {[...destinationPresets, { id: 'doctor', name: '医生' }].map((g) => <button key={g.id} aria-pressed={presetGroup === g.id} onClick={() => setPresetGroup(g.id)}>{g.name}</button>)}
+          </div>
+          {presetGroup === 'doctor' ? doctors.map((doctor) => <section key={doctor.id} className="doctor-profile">
+            <h3>{doctor.name}<small> · {doctor.department}</small></h3>
+            <p>{doctor.room}</p><p>演示排班：{doctor.schedule}</p><p className="muted">{doctor.note}</p>
+            <button className="primary" onClick={() => navigate(doctor.target)}><Navigation size={17} /> 导航到诊室</button>
+          </section>) : <div className="preset-destinations">
+            {destinationPresets.find((g) => g.id === presetGroup)?.items.map((id) => {
+              const place = getNode(id, state);
+              return <button key={id} onClick={() => navigate(id)}><MapPin size={20} /><span><strong>{place.name}</strong><small>{floors.find((f) => f.id === place.level)?.name}</small></span><ChevronRight size={16} /></button>;
+            })}
+          </div>}
+          {presetGroup === 'parking' && <p className="preset-note">户外停车场按人行入口导航。没有实时车位或收费数据；地下车库尚未建模。</p>}
+        </DialogContent>
+      </Dialog>
       <nav className="mobile-module-dock" aria-label="导诊面板切换">
         <button type="button" aria-pressed={mobilePanel === 'task'} onClick={() => toggleMobilePanel('task')} aria-expanded={mobilePanel === 'task' && mobilePanelOpen}>
           <span className="module-key"><Check size={22} /></span><span>当前任务</span>

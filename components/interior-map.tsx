@@ -125,10 +125,11 @@ function FloorSpace({
               engine.current?.reset();
               setTour(false);
             }}
-            aria-label="重置三维楼层视角"
+            aria-label="重置三维楼层视角" title="立体视角"
           >
             <RotateCcw size={18} />
           </button>
+          <button onClick={() => engine.current?.view('overhead')} aria-label="切换俯视路线视角">俯视</button>
           <button
             onClick={() => engine.current?.zoom(0.85)}
             aria-label="拉近三维地图"

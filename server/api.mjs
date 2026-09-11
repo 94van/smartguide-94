@@ -11,6 +11,9 @@ import {
   nodes,
   edges,
   pois,
+  amenities,
+  doctors,
+  destinationPresets,
   floors,
   buildings,
   stages,
@@ -59,7 +62,7 @@ export const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && url.pathname === '/api/state')
       return send(200, state);
     if (req.method === 'GET' && url.pathname === '/api/hospital')
-      return send(200, { nodes, edges, pois, floors, buildings, stages });
+      return send(200, { nodes, edges, pois, amenities, doctors, destinationPresets, floors, buildings, stages });
     if (req.method === 'GET' && url.pathname === '/api/route')
       return send(200, {
         route: planRoute(
